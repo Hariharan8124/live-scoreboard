@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter Scores</title>
+</head>
+<body>
+    <h1>Enter New Score</h1>
+    <form id="scoreForm">
+        <label for="rank">Rank:</label><br>
+        <input type="number" id="rank" name="rank" required><br><br>
+
+        <label for="schoolName">School Name:</label><br>
+        <input type="text" id="schoolName" name="schoolName" required><br><br>
+
+        <label for="participant">Participant:</label><br>
+        <input type="text" id="participant" name="participant" required><br><br>
+
+        <label for="points">Points:</label><br>
+        <input type="number" id="points" name="points" required><br><br>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        document.getElementById('scoreForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent page from reloading
+
+            const rank = document.getElementById('rank').value;
+            const schoolName = document.getElementById('schoolName').value;
+            const participant = document.getElementById('participant').value;
+            const points = document.getElementById('points').value;
+
+            const scoreData = { rank, schoolName, participant, points };
+
+            // Send score data to the backend (PHP file) to save it
+            fetch('upload_score.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(scoreData)
+            }).then(response => response.json())
+              .then(data => alert('Score submitted successfully!'))
+              .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>

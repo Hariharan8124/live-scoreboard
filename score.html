@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scoreboard</title>
+</head>
+<body>
+    <h1>Live Scoreboard</h1>
+
+    <!-- Table structure with columns for rank, school name, participant, and points -->
+    <table id="scoreboard" border="1" style="width: 100%; text-align: left;">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>School Name</th>
+                <th>Participant</th>
+                <th>Points</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Rows for scores will be dynamically inserted here -->
+        </tbody>
+    </table>
+
+    <script>
+        // Function to load the scores from a JSON file and update the table
+        function fetchScores() {
+            fetch('scores.json') // Fetch the scores.json file
+                .then(response => response.json()) // Parse the JSON data
+                .then(data => {
+                    const tbody = document.querySelector('#scoreboard tbody');
+                    tbody.innerHTML = ''; // Clear any existing rows in the table
+
+                    // If there are no scores, display a message
+                    if (data.length === 0) {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `<td colspan="4">No scores available yet.</td>`;
+                        tbody.appendChild(row);
+                    } else {
+                        // Loop through the scores and add them as table rows
+                        data.forEach(score => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${score.rank}</td>
+                                <td>${score.schoolName}</td>
+                                <td>${score.participant}</td>
+                                <td>${score.points}</td>
+                            `;
+                            tbody.appendChild(row);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching scores:', error);
+                });
+        }
+
+        // Call fetchScores every 5 seconds to keep the table updated
+        setInterval(fetchScores, 5000);
+
+        // Initial call to load the scores when the page loads
+        fetchScores();
+    </script>
+</body>
+</html>
